@@ -276,14 +276,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // Validate the checklist before generating the PDF
     function validateChecklist() {
         let isValid = true;
-        /*Object.keys(checkboxes).forEach(test => {
-            if (!checkboxes[test].checked && notes[test].value.trim() === "") {
-                isValid = false;
-                notes[test].style.border = "1px solid red"; // Highlight missing notes
-            } else {
-                notes[test].style.border = ""; // Reset border
-            }
-        });*/
+        //Object.keys(checkboxes).forEach(test => {
+        //    if (!checkboxes[test].checked && notes[test].value.trim() === "") {
+        //        isValid = false;
+        //        notes[test].style.border = "1px solid red"; // Highlight missing notes
+        //    } else {
+        //        notes[test].style.border = ""; // Reset border
+        //   }
+        //});
         return isValid;
     }
 
