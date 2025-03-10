@@ -1,29 +1,97 @@
 document.addEventListener("DOMContentLoaded", function () {
     const testCases = [
         {
-            category: "Application Launch & Initialization",
+            category: "Firmware Installation & Update",
             tests: [
-                "Verify that the EMV application launches without crashes.",
-                "Confirm that the application initializes all required services (card reader, network, security modules).",
-                "Check that the application displays the correct version number."
+								"Ensure the firmware installation process completes without errors.",
+								"Verify the firmware version is correctly displayed after installation.",
+								"Perform an OTA (Over-the-Air) update and check for successful application.",
+								"Test rollback functionality in case of a failed update.",
+								"Confirm that security patches are applied with the update."
             ]
         },
         {
-            category: "Card Detection & Transaction Initiation",
+            category: "Boot and System Stability",
             tests: [
-                "Insert a chip card and verify that it is detected correctly.",
-                "Verify that the application retrieves card data and displays the correct card type.",
-                "Confirm that the application prompts for required user actions (PIN entry, signature, etc.).",
-                "Attempt a transaction with an expired card and check if it is declined."
+								"Reboot the terminal and verify it starts up without issues.",
+								"Check if all necessary system services (payment processing, network, security) initialize properly.",
+								"Simulate power loss during startup and confirm system recovery.",
+								"Run the terminal continuously for 24+ hours and monitor for crashes or slowdowns."
             ]
         },
         {
-            category: "Payment Processing & Authorization",
+            category: "Hardware Component Testing",
             tests: [
-                "Process an online-authorized transaction and verify approval.",
-                "Simulate a declined transaction and check if the correct decline reason is displayed.",
-                "Perform an offline-approved transaction (if supported) and verify receipt printing.",
-                "Check if authorization times are within acceptable limits."
+								"Test the touchscreen responsiveness and accuracy.",
+								"Verify proper functionality of physical buttons (power, volume, etc.",
+								"Check card reader performance (EMV chip, magnetic stripe, NFC tap).",
+								"Test printer functionality by printing multiple receipts.",
+								"Ensure the barcode scanner (if applicable) works as expected.",
+								"Validate speaker and audio functionality for transaction confirmation sounds."
+            ]
+        },
+        {
+            category: "Connectivity & Network Performance",
+            tests: [
+								"Test Wi-Fi connectivity, ensuring stable connection across different networks.",
+								"Verify mobile data (3G/4G/5G) connectivity and fallback between Wi-Fi and mobile data.",
+								"Simulate network disconnection and confirm automatic reconnection.",
+								"Perform a transaction under weak signal conditions and monitor behavior.",
+								"Ensure Bluetooth peripherals (keyboards, printers) connect and function properly."
+            ]
+        },
+        {
+            category: "Security & Compliance",
+            tests: [
+								"Test secure boot to prevent unauthorized firmware changes.",
+								"Verify that unauthorized applications cannot be installed.",
+								"Ensure the terminal enforces PCI-DSS and EMVCo security standards.",
+								"Attempt to access restricted areas of the OS and verify security enforcement."
+            ]
+       },
+       {
+            category: "Transaction Processing",
+            tests: [
+								"Swipe a magnetic stripe card and verify processing.",
+								"Tap an NFC-enabled card and ensure proper detection.",
+								"Perform a manual card entry and validate processing.",
+								"Simulate a declined transaction and check for correct error handling.",
+								"Test offline transaction approval and later upload when online.",
+								"Verify tip adjustment functionality, if applicable."
+            ]
+       },
+       {
+            category: "Performance & Stress Testing",
+            tests: [
+								"Run multiple back-to-back transactions and monitor system performance.",
+								"Perform large data transfers and observe memory usage.",
+								"Test system behavior under heavy simultaneous usage (transactions, printing, network access).",
+								"Verify application responsiveness when processing multiple transactions in quick succession."
+            ]
+       },
+       {
+            category: "Power Management & Battery Performance",
+            tests: [
+								"Charge the terminal from 0% to 100% and check charging speed.",
+								"Test transaction processing while on battery power and measure consumption.",
+								"Verify power-saving mode functionality.",
+								"Ensure battery level warnings and automatic shutdown work as expected."
+            ]
+       },
+       {
+            category: "Logs & Diagnostics",
+            tests: [
+								"Verify that system logs capture all key events without exposing sensitive data.",
+								"Test log retrieval process for debugging and compliance.",
+								"Simulate a critical error and check if logs provide useful diagnostic information.",
+								"Confirm that the terminal supports remote diagnostics and maintenance."
+            ]
+       },
+       {
+            category: "Final Review",
+            tests: [
+								"Document all test results and report any unexpected behavior.",
+								"Verify that all offline transactions are successfully uploaded before concluding testing."
             ]
         }
     ];
