@@ -1,99 +1,31 @@
 document.addEventListener("DOMContentLoaded", function () {
     const testCases = [
         {
-            category: "Firmware Installation & Update",
+            category: "Application Launch & Initialization",
             tests: [
-								"Ensure the firmware installation process completes without errors.",
-								"Verify the firmware version is correctly displayed after installation.",
-								"Perform an OTA (Over-the-Air) update and check for successful application.",
-								"Test rollback functionality in case of a failed update.",
-								"Confirm that security patches are applied with the update."
+                "Verify that the EMV application launches without crashes.",
+                "Confirm that the application initializes all required services (card reader, network, security modules).",
+                "Check that the application displays the correct version number."
             ]
         },
         {
-            category: "Boot and System Stability",
+            category: "Card Detection & Transaction Initiation",
             tests: [
-								"Reboot the terminal and verify it starts up without issues.",
-								"Check if all necessary system services (payment processing, network, security) initialize properly.",
-								"Simulate power loss during startup and confirm system recovery.",
-								"Run the terminal continuously for 24+ hours and monitor for crashes or slowdowns."
+                "Insert a chip card and verify that it is detected correctly.",
+                "Verify that the application retrieves card data and displays the correct card type.",
+                "Confirm that the application prompts for required user actions (PIN entry, signature, etc.).",
+                "Attempt a transaction with an expired card and check if it is declined."
             ]
         },
         {
-            category: "Hardware Component Testing",
+            category: "Payment Processing & Authorization",
             tests: [
-								"Test the touchscreen responsiveness and accuracy.",
-								"Verify proper functionality of physical buttons (power, volume, etc.",
-								"Check card reader performance (EMV chip, magnetic stripe, NFC tap).",
-								"Test printer functionality by printing multiple receipts.",
-								"Ensure the barcode scanner (if applicable) works as expected.",
-								"Validate speaker and audio functionality for transaction confirmation sounds."
+                "Process an online-authorized transaction and verify approval.",
+                "Simulate a declined transaction and check if the correct decline reason is displayed.",
+                "Perform an offline-approved transaction (if supported) and verify receipt printing.",
+                "Check if authorization times are within acceptable limits."
             ]
-        },
-        {
-            category: "Connectivity & Network Performance",
-            tests: [
-								"Test Wi-Fi connectivity, ensuring stable connection across different networks.",
-								"Verify mobile data (3G/4G/5G) connectivity and fallback between Wi-Fi and mobile data.",
-								"Simulate network disconnection and confirm automatic reconnection.",
-								"Perform a transaction under weak signal conditions and monitor behavior.",
-								"Ensure Bluetooth peripherals (keyboards, printers) connect and function properly."
-            ]
-        },
-        {
-            category: "Security & Compliance",
-            tests: [
-								"Test secure boot to prevent unauthorized firmware changes.",
-								"Verify that unauthorized applications cannot be installed.",
-								"Ensure the terminal enforces PCI-DSS and EMVCo security standards.",
-								"Attempt to access restricted areas of the OS and verify security enforcement."
-            ]
-       },
-       {
-            category: "Transaction Processing",
-            tests: [
-								"Swipe a magnetic stripe card and verify processing.",
-								"Tap an NFC-enabled card and ensure proper detection.",
-								"Perform a manual card entry and validate processing.",
-								"Simulate a declined transaction and check for correct error handling.",
-								"Test offline transaction approval and later upload when online.",
-								"Verify tip adjustment functionality, if applicable."
-            ]
-       },
-       {
-            category: "Performance & Stress Testing",
-            tests: [
-								"Run multiple back-to-back transactions and monitor system performance.",
-								"Perform large data transfers and observe memory usage.",
-								"Test system behavior under heavy simultaneous usage (transactions, printing, network access).",
-								"Verify application responsiveness when processing multiple transactions in quick succession."
-            ]
-       },
-       {
-            category: "Power Management & Battery Performance",
-            tests: [
-								"Charge the terminal from 0% to 100% and check charging speed.",
-								"Test transaction processing while on battery power and measure consumption.",
-								"Verify power-saving mode functionality.",
-								"Ensure battery level warnings and automatic shutdown work as expected."
-            ]
-       },
-       {
-            category: "Logs & Diagnostics",
-            tests: [
-								"Verify that system logs capture all key events without exposing sensitive data.",
-								"Test log retrieval process for debugging and compliance.",
-								"Simulate a critical error and check if logs provide useful diagnostic information.",
-								"Confirm that the terminal supports remote diagnostics and maintenance."
-            ]
-       },
-       {
-            category: "Final Review",
-            tests: [
-								"Document all test results and report any unexpected behavior.",
-								"Verify that all offline transactions are successfully uploaded before concluding testing."
-            ]
-       }
+        }
     ];
 
     const checklistContainer = document.getElementById("checklist");
@@ -113,6 +45,25 @@ document.addEventListener("DOMContentLoaded", function () {
     nameInput.style.border = "1px solid #ccc";
     nameInput.style.borderRadius = "5px";
 
+    // Create input fields for hardware, firmware, and application version
+    const hardwareInput = createVersionInput("Hardware Version");
+    const firmwareInput = createVersionInput("Firmware Version");
+    const applicationInput = createVersionInput("Application Version");
+
+    // Helper function to create version input fields
+    function createVersionInput(placeholder) {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = placeholder;
+        input.style.marginBottom = "10px";
+        input.style.padding = "10px";
+        input.style.fontSize = "16px";
+        input.style.width = "200px";
+        input.style.border = "1px solid #ccc";
+        input.style.borderRadius = "5px";
+        return input;
+    }
+
     // Create the download button
     const downloadButton = document.createElement("button");
     downloadButton.textContent = "Download PDF";
@@ -128,6 +79,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Add the input and button to the container
     inputButtonContainer.appendChild(nameInput);
+    inputButtonContainer.appendChild(hardwareInput);
+    inputButtonContainer.appendChild(firmwareInput);
+    inputButtonContainer.appendChild(applicationInput);
     inputButtonContainer.appendChild(downloadButton);
 
     // Add the container to the body
@@ -335,18 +289,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Generate the PDF
     function generatePDF() {
-        console.log("Generate PDF button clicked"); // Debug log
+        console.log("Generate PDF button clicked");
 
         // Validate QA Name
         const qaName = nameInput.value.trim();
-        console.log("QA Name:", qaName); // Debug log
-
         if (!qaName) {
-            console.log("QA Name is empty"); // Debug log
             errorMessage.textContent = "Please enter a QA Name before downloading the PDF.";
-            return; // Stop further execution
+            return;
         } else {
-            errorMessage.textContent = ""; // Clear error message if QA Name is entered
+            errorMessage.textContent = "";
         }
 
         // Validate checklist
@@ -367,6 +318,7 @@ document.addEventListener("DOMContentLoaded", function () {
             Object.keys(checkboxes).length) * 100
         ).toFixed(2);
 
+        // Set font and add metadata
         doc.setFont("helvetica");
         doc.setFontSize(10);
         doc.text(`Date: ${currentDate}    Time: ${currentTime}`, 10, y);
@@ -374,32 +326,55 @@ document.addEventListener("DOMContentLoaded", function () {
         doc.text(`Device/Public IP: ${publicIP}`, 10, y);
         y += 7;
         doc.text(`QA Name: ${qaName}`, 10, y);
+        y += 7;
+        doc.text(`Hardware Version: ${hardwareInput.value.trim() || "Not provided"}`, 10, y);
+        y += 7;
+        doc.text(`Firmware Version: ${firmwareInput.value.trim() || "Not provided"}`, 10, y);
+        y += 7;
+        doc.text(`Application Version: ${applicationInput.value.trim() || "Not provided"}`, 10, y);
         y += 10;
         doc.text(`Completion: ${completionPercentage}%`, 10, y);
         y += 10;
 
+        // Add title
         doc.setFontSize(14);
         doc.text("Store and Forward Testing Script", 10, y);
         y += 10;
 
+        // Add test cases
         doc.setFontSize(12);
+        const maxWidth = 180; // Maximum width for text before splitting into new lines
         testCases.forEach(section => {
             doc.text(section.category, 10, y);
             y += 7;
             section.tests.forEach(test => {
                 const checkboxMark = checkboxes[test].checked ? "[X]" : "[ ]";
                 const noteText = notes[test].value ? ` - Notes: ${notes[test].value}` : "";
-                doc.text(`${checkboxMark} ${test}${noteText}`, 15, y);
-                y += 6;
+
+                // Combine the test and notes
+                const fullText = `${checkboxMark} ${test}${noteText}`;
+
+                // Split the text into multiple lines if it exceeds the maximum width
+                const lines = doc.splitTextToSize(fullText, maxWidth);
+
+                // Add each line to the PDF
+                lines.forEach(line => {
+                    if (y > 280) { // Add a new page if the content exceeds the page height
+                        doc.addPage();
+                        y = 15; // Reset y position for the new page
+                    }
+                    doc.text(line, 15, y);
+                    y += 6; // Move to the next line
+                });
+                y += 5; // Add extra space between test cases
             });
-            y += 5;
+            y += 5; // Add extra space between sections
         });
 
-        // Append date and time to the filename
-        const formattedDate = currentDate.replace(/\//g, "-"); // Replace slashes with dashes
-        const formattedTime = currentTime.replace(/:/g, "-"); // Replace colons with dashes
+        // Save PDF
+        const formattedDate = currentDate.replace(/\//g, "-");
+        const formattedTime = currentTime.replace(/:/g, "-");
         const fileName = `EMV_Testing_Checklist_${qaName}_${formattedDate}_${formattedTime}.pdf`;
-
-        doc.save(fileName); // Save the PDF with the updated filename
+        doc.save(fileName);
     }
 });
